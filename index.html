@@ -533,6 +533,72 @@
                 transform: scaleY(0.1);
             }
         }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+
+            /* Adjust Title */
+            .title {
+                font-size: 2rem;
+                margin-top: 20px;
+            }
+
+            /* Adjust Container positioning */
+            .container {
+                margin-top: -60px;
+            }
+
+            /* Scale down the tree */
+            .tree-container {
+                transform: scale(0.9);
+                margin-top: 20px;
+            }
+
+            /* Reposition Santa to be closer or overlapping slightly to fit */
+            .santa-claus {
+                right: -60px;
+                /* Bring closer */
+                transform: scale(0.7);
+                /* Make smaller */
+                bottom: 0px;
+            }
+
+            .santa-claus:hover {
+                transform: scale(0.8) translateY(-10px);
+            }
+
+            /* Reposition Greeting Card */
+            .greeting-card {
+                width: 70%;
+                left: 50%;
+                transform: translateX(-50%);
+                top: auto;
+                bottom: 80px;
+                /* Above footer */
+                text-align: center;
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+
+            .greeting-card h3 {
+                font-size: 1.2rem;
+                margin-bottom: 5px;
+            }
+
+            /* Adjust moon size */
+            .moon {
+                width: 60px;
+                height: 60px;
+                top: 20px;
+                right: 20px;
+            }
+
+            /* Adjust Sleigh */
+            .sleigh-container {
+                top: 40px;
+                transform: scale(0.6);
+            }
+        }
     </style>
 </head>
 
