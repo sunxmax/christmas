@@ -598,6 +598,52 @@
                 top: 40px;
                 transform: scale(0.6);
             }
+
+            /* Adjust Sleigh */
+            .sleigh-container {
+                top: 40px;
+                transform: scale(0.6);
+            }
+        }
+
+        /* Music Control */
+        .music-control {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s;
+        }
+
+        .music-control:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .music-control.playing {
+            animation: spinMusic 3s linear infinite;
+            border-color: #f1c40f;
+            background: rgba(241, 196, 15, 0.2);
+        }
+
+        @keyframes spinMusic {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
     </style>
 </head>
@@ -607,8 +653,19 @@
 
 
     <div class="glow-line"></div>
-
     <div class="moon"></div>
+
+    <!-- Music Button -->
+    <div class="music-control" onclick="toggleMusic()" title="Play Music">
+        <svg fill="#fff" width="20" height="20" viewBox="0 0 24 24">
+            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
+        </svg>
+    </div>
+    <audio id="bgm" loop>
+        <source
+            src="https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Kevin_MacLeod/Jazz_Sampler/Kevin_MacLeod_-_Jingle_Bells.mp3"
+            type="audio/mp3">
+    </audio>
 
     <div class="greeting-card">
         <h3>To: 亲爱的熙熙小朋友</h3>
@@ -789,6 +846,29 @@
             }, 3000);
         }
 
+        // Music Control
+        let isPlaying = false;
+        const audio = document.getElementById('bgm');
+        const musicBtn = document.querySelector('.music-control');
+
+        function toggleMusic() {
+            if (isPlaying) {
+                audio.pause();
+                musicBtn.classList.remove('playing');
+                musicBtn.title = "Play Music";
+            } else {
+                audio.volume = 0.5;
+                audio.play().then(() => {
+                    musicBtn.classList.add('playing');
+                    musicBtn.title = "Pause Music";
+                }).catch(e => {
+                    console.log("Audio play failed", e);
+                    showToast("请先在页面点击任意位置互动");
+                });
+            }
+            isPlaying = !isPlaying;
+        }
+
         // Add shake keyframes dynamically
         const styleSheet = document.createElement("style");
         styleSheet.innerText = `
@@ -804,4 +884,4 @@
     </script>
 </body>
 
-</html>
+</html> 
