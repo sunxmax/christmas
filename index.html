@@ -661,9 +661,10 @@
             <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
         </svg>
     </div>
-    <audio id="bgm" loop>
-        <!-- Using a reliable CDN for Jingle Bells -->
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mp3">
+    <audio id="bgm" loop autoplay>
+        <source
+            src="https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Kevin_MacLeod/Jazz_Sampler/Kevin_MacLeod_-_Jingle_Bells.mp3"
+            type="audio/mp3">
     </audio>
 
     <div class="greeting-card">
@@ -850,22 +851,41 @@
         const audio = document.getElementById('bgm');
         const musicBtn = document.querySelector('.music-control');
 
+        // Browser Autoplay Policy often blocks auto-playing audio
+        // We attempt to play immediately, but also add a click listener to the body to unlock it
+        function tryPlayMusic() {
+            if (isPlaying) return;
+            audio.volume = 0.5;
+            audio.play().then(() => {
+                isPlaying = true;
+                musicBtn.classList.add('playing');
+                musicBtn.title = "Pause Music";
+            }).catch(e => {
+                console.log("Auto-play blocked, waiting for interaction");
+            });
+        }
+
+        // Try playing on load
+        tryPlayMusic();
+
+        // Ensure play on first click anywhere
+        document.body.addEventListener('click', function unlockAudio() {
+            tryPlayMusic();
+            document.body.removeEventListener('click', unlockAudio);
+        }, { once: true });
+
         function toggleMusic() {
+            // Stop the unlock listener if user manually toggles
+            document.body.removeEventListener('click', tryPlayMusic);
+
             if (isPlaying) {
                 audio.pause();
+                isPlaying = false;
                 musicBtn.classList.remove('playing');
                 musicBtn.title = "Play Music";
             } else {
-                audio.volume = 0.5;
-                audio.play().then(() => {
-                    musicBtn.classList.add('playing');
-                    musicBtn.title = "Pause Music";
-                }).catch(e => {
-                    console.log("Audio play failed", e);
-                    showToast("请先在页面点击任意位置互动");
-                });
+                tryPlayMusic();
             }
-            isPlaying = !isPlaying;
         }
 
         // Add shake keyframes dynamically
